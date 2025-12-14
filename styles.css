@@ -1,0 +1,673 @@
+html, body {
+  height: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --cream: #f5f0e6;
+    --paper-white: #fefefa;
+}
+
+body {
+    font-family: Georgia, 'Times New Roman', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.screen {
+    display: none;
+    width: 100%;
+    min-height: 100svh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.screen.active {
+    display: flex;
+}
+
+#start-screen {
+    background-image: url('assets/bg/1-bg-plaid-red.png');
+}
+
+/* Start screen stage = full-screen positioning context */
+.start-stage{
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* IMPORTANT: do NOT center everything vertically */
+  justify-content: flex-start;
+
+  /* use top/bottom padding to place the group */
+  padding: 18svh 16px 10svh;
+
+  gap: 18px;
+  z-index: 3; /* above snow */
+}
+.title-sign{
+    margin: 0;
+  width: min(86vw, 380px);
+  height: auto;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  z-index: 2;
+}
+
+.sticker{
+  position: absolute;
+  height: auto;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* AFTER layout: stickers spread out like your Figma reference */
+.sticker-bow{
+  top: 16%;
+  left: 18%;
+  width: 88px;
+  transform: rotate(-10deg);
+}
+.sticker-camera{
+  top: 10%;
+  right: 20%;
+  width: 92px;
+  transform: rotate(12deg);
+}
+.sticker-tree{
+  top: 56%;
+  left: 16%;
+  width: 88px;
+  transform: rotate(-6deg);
+}
+.sticker-teddy{
+  top: 62%;
+  right: 22%;
+  width: 78px;
+  transform: rotate(8deg);
+}
+
+#camera-screen,
+#developing-screen,
+#preview-screen,
+#actions-screen {
+    background-image: url('assets/bg/2-bg-plaid-green.png');
+}
+
+
+.screen-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.title-image {
+    max-width: 90%;
+    width: 400px;
+    height: auto;
+    margin-bottom: 40px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+
+
+@keyframes rattle {
+    0%, 100% { transform: rotate(0deg); }
+    15% { transform: rotate(-3deg); }
+    30% { transform: rotate(3deg); }
+    45% { transform: rotate(-2deg); }
+    60% { transform: rotate(2deg); }
+    75% { transform: rotate(-1deg); }
+    90% { transform: rotate(1deg); }
+}
+
+.img-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.1s ease;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+.img-btn img {
+    display: block;
+    max-width: 280px;
+    width: 100%;
+    height: auto;
+}
+
+.img-btn:hover {
+    animation: rattle 0.4s ease-in-out;
+}
+
+.img-btn:active {
+    transform: scale(0.95);
+}
+
+.img-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    animation: none;
+}
+
+.img-btn:disabled:active {
+    transform: none;
+}
+
+.screen-title {
+    font-family: 'Birthstone', cursive;
+    font-size: clamp(3.5rem, 18vw, 86px);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: #EEDEC1;
+}
+
+/* ===== Snowfall layer ===== */
+.decorations{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2; /* behind UI but above backgrounds */
+}
+
+.snowflake{
+  position: absolute;
+  top: -10vh;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7); /* white + soft */
+  animation: snowFall 9s linear infinite;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
+}
+
+@keyframes snowFall{
+  0%   { transform: translateY(-10vh); }
+  100% { transform: translateY(110vh); }
+}
+/* ===== Clean camera structure (lace-only frame) ===== */
+.lace-frame-wrapper {
+  position: relative;
+  width: min(86vw, 420px);
+  aspect-ratio: 3 / 4;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+}
+
+.lace-frame-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.camera-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Tune these 4 values to match the lace window perfectly */
+/* Mobile-safe: force video to fill the hole */
+.video-hole{
+  position: absolute;
+  left: 12%;
+  top: 18%;
+  width: 76%;
+  height: 64%;
+  overflow: hidden;
+  z-index: 1;
+  background: transparent;
+}
+
+/* Make the video fill the hole in ALL browsers */
+#video{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  background: transparent;
+    display: block;
+}
+
+.countdown-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.countdown-overlay.hidden {
+    display: none;
+}
+
+#countdown-number {
+    font-size: clamp(5rem, 20vw, 10rem);
+    font-weight: bold;
+    color: var(--cream);
+    text-shadow: 
+        0 0 30px rgba(255, 215, 0, 0.8),
+        0 0 60px rgba(255, 215, 0, 0.4),
+        4px 4px 0 #a62639;
+    animation: pulse 1s ease-in-out infinite;
+    font-family: Georgia, serif;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.flash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.flash.active {
+    animation: flash-effect 0.3s ease-out;
+}
+
+@keyframes flash-effect {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.photo-counter {
+    margin-top: 15px;
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
+    color: var(--cream);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 25px;
+    border-radius: 20px;
+    font-style: italic;
+}
+
+.camera-controls {
+    margin-top: 20px;
+}
+
+.developing-content {
+    text-align: center;
+}
+
+.polaroid-developing {
+    margin-bottom: 30px;
+}
+
+.polaroid-shake {
+    animation: shake 0.5s ease-in-out infinite;
+}
+
+@keyframes shake {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+
+.polaroid-frame {
+    width: 160px;
+    height: 200px;
+    background: var(--paper-white);
+    padding: 12px 12px 35px 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    margin: 0 auto;
+}
+
+.polaroid-image {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e8e4dc 0%, #d8d4cc 50%, #c8c4bc 100%);
+    animation: develop 2s ease-in-out infinite;
+}
+
+@keyframes develop {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+}
+
+.developing-text {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    color: var(--cream);
+    font-style: italic;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.dispenser-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.dispenser-image {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
+    z-index: 10;
+    position: relative;
+}
+
+.strip-slot {
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    animation: slideDown 1s ease-out forwards;
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translateX(-50%) translateY(-100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+.strip-preview {
+    background: var(--paper-white);
+    padding: 8px;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        0 3px 10px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+}
+
+.preview-strip {
+    transform: rotate(-1deg);
+}
+
+.preview-strip canvas,
+.actions-strip canvas {
+    max-width: 100%;
+    max-height: 40vh;
+    display: block;
+}
+
+.actions-content {
+    gap: 25px;
+}
+
+.actions-strip {
+    transform: rotate(1deg);
+    margin-bottom: 10px;
+}
+
+.actions-strip canvas {
+    max-height: 45vh;
+}
+
+.actions-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    width: 100%;
+}
+
+.actions-buttons .img-btn img {
+    max-width: 260px;
+}
+
+.ios-message {
+    background: var(--cream);
+    color: #a62639;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: clamp(0.85rem, 3vw, 1rem);
+    border: 2px solid #8b1e2f;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.ios-message.hidden {
+    display: none;
+}
+
+.hidden-canvas {
+    display: none;
+}
+
+@media (max-width: 480px) {
+    .title-image {
+        width: 300px;
+        margin-bottom: 30px;
+    }
+    
+    .img-btn img {
+        max-width: 220px;
+    }
+    
+    .lace-frame-wrapper {
+        max-width: 320px;
+    }
+    
+    .dispenser-image {
+        max-width: 280px;
+    }
+    
+    .polaroid-frame {
+        width: 130px;
+        height: 165px;
+    }
+    
+    .actions-buttons .img-btn img {
+        max-width: 220px;
+    }
+}
+
+@media (min-height: 800px) {
+    .lace-frame-wrapper {
+        max-width: 420px;
+    }
+    
+    .preview-strip canvas,
+    .actions-strip canvas {
+        max-height: 50vh;
+    }
+}
+
+@media (hover: none) {
+    .img-btn:hover {
+        animation: none;
+    }
+    
+    .img-btn:active {
+        animation: rattle 0.2s ease-in-out;
+        transform: scale(0.95);
+    }
+}
+
+
+@media (max-width: 480px){
+  .sticker-bow{
+    top: 7%;
+    left: 15%;
+    width: 88px;
+    transform: rotate(-10deg);
+  }
+
+  .sticker-camera{
+    top: 7%;
+    right: 10%;
+    width: 92px;
+    transform: rotate(12deg);
+  }
+
+  .sticker-tree{
+    top: 53%;
+    left: 16%;
+    width: 88px;
+    transform: rotate(-6deg);
+  }
+
+  .sticker-teddy{
+    top: 56%;
+    right: 22%;
+    width: 78px;
+    transform: rotate(8deg);
+  }
+}
+
+@media (max-width: 480px){
+  #start-btn{
+    margin-top: 12svh;
+  }
+}
+
+  /* Make the Start button not too huge */
+  .img-btn img{ max-width: 280px; }
+}
+
+/* =========================
+   Screen 3: Preview (metal)
+   Screen 4: Actions (knit)
+   ========================= */
+
+/* If you have these BG assets, use them.
+   If your filenames differ, update the URLs here. */
+#preview-screen{
+    background-image: url('assets/bg/3-bg-bear-red.png');
+}
+
+#actions-screen{
+    background-image: url('assets/bg/4-bg-knitted-trees.png'));
+}
+
+
+
+/* Preview layout */
+.preview-stage{
+  position: relative;
+  width: min(92vw, 520px);
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+}
+
+/* Metal frame image fills most of screen height */
+.metal-frame{
+  z-index: 20;
+  width: 100%;
+  height: auto;
+    display: block;
+    filter: drop-shadow(0 14px 24px rgba(0,0,0,0.35));
+}
+
+/* The “window” area inside the metal frame where the strip should appear
+   IMPORTANT: Tune these 4 numbers to match your metal asset exactly */
+.strip-window{
+  position: absolute;
+  /* 👇 adjust these to fit your metal frame opening */
+  left: 27%;
+  top: 19%;
+  width: 56%;
+  height: 76%;
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* Slide down animation */
+.strip-slot{
+  z-index: 1;
+  position: absolute;
+  left: 49%;
+  top: 51%;
+transform: translate(-50%, -50%) translateY(-120px);
+  opacity: 0;
+    animation: stripSlideDown 900ms ease-out forwards;
+     width: 50%;
+      max-width: 260px;
+}
+
+@keyframes stripSlideDown{
+     to{
+        transform: translate(-50%, -50%) translateY(0);
+        opacity: 1;
+      }
+}
+
+/* Make the canvas scale nicely inside the window */
+#strip-canvas{
+    width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+}
+
+/* invisible continue button (tap anywhere) */
+.invisible-continue{
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  border: 0;
+}
+
+/* Actions screen layout */
+.actions-stage{
+  width: 100%;
+  min-height: 100svh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 24px;
+  padding: 40px 18px;
+}
