@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Christmas Booth 🎄</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Birthstone&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=4">
+</head>
+<body>
+    <div id="start-screen" class="screen active">
+      <div class="decorations">
+        <div class="snowflake" style="left: 10%; animation-delay: 0s;">❄</div>
+        <div class="snowflake" style="left: 25%; animation-delay: 1s;">❄</div>
+        <div class="snowflake" style="left: 40%; animation-delay: 0.5s;">❄</div>
+        <div class="snowflake" style="left: 55%; animation-delay: 1.5s;">❄</div>
+        <div class="snowflake" style="left: 70%; animation-delay: 0.3s;">❄</div>
+        <div class="snowflake" style="left: 85%; animation-delay: 1.2s;">❄</div>
+      </div>
+
+        <div class="start-stage">
+          <img class="sticker sticker-bow" src="assets/stickers/sticker-bow.png" alt="">
+          <img class="sticker sticker-camera" src="assets/stickers/sticker-camera.png" alt="">
+          <img class="sticker sticker-tree" src="assets/stickers/sticker-tree.png" alt="">
+          <img class="sticker sticker-teddy" src="assets/stickers/sticker-teddy.png" alt="">
+
+          <img class="title-sign" src="assets/ui/title-merry-booth.png" alt="Merry Booth">
+
+          <button id="start-btn" class="img-btn" aria-label="Start">
+            <img src="assets/ui/btn-start.png" alt="Start">
+          </button>
+        </div>
+    </div>
+
+        <div id="camera-screen" class="screen">
+          <div class="screen-content">
+            <h2 class="screen-title">Say cheer!</h2>
+
+            <div class="lace-frame-wrapper">
+              <!-- video layer -->
+              <div class="camera-container">
+                <div class="video-hole">
+                  <video id="video" autoplay playsinline></video>
+                </div>
+
+                <div id="countdown-overlay" class="countdown-overlay hidden">
+                  <span id="countdown-number">3</span>
+                </div>
+                <div id="flash" class="flash"></div>
+              </div>
+
+              <!-- lace overlay -->
+              <img class="lace-frame-overlay" src="assets/frames/frame-lace.png" alt="">
+            </div>
+
+            <div class="photo-counter">
+              <span id="photo-count">Photo 1 of 3</span>
+            </div>
+
+            <div class="camera-controls">
+              <button id="capture-btn" class="img-btn" aria-label="Take Photo">
+                <img src="assets/ui/btn-take-photo.png" alt="Take Photo">
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="developing-screen" class="screen">
+            <div class="developing-content">
+                <div class="polaroid-developing">
+                    <div class="polaroid-shake">
+                        <div class="polaroid-frame">
+                            <div class="polaroid-image"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="developing-text">Developing...</p>
+            </div>
+        </div>
+
+        <!-- Screen 3: Preview strip (teddy red bg + metal frame) -->
+        <div id="preview-screen" class="screen">
+          <div class="preview-stage">
+            <!-- background frame image -->
+            <img class="metal-frame" src="assets/frames/metal-dispenser.png" alt="">
+
+            <!-- the strip drops into the frame -->
+            <div class="strip-slot" id="strip-slot">
+              <canvas id="strip-canvas"></canvas>
+            </div>
+
+            <!-- tap anywhere to continue -->
+            <button id="continue-btn" class="invisible-continue" aria-label="Continue to actions"></button>
+          </div>
+        </div>
+
+        <!-- Screen 4: Actions (knit bg) -->
+        <div id="actions-screen" class="screen">
+          <div class="actions-stage">
+            <button id="download-btn" class="img-btn" aria-label="Download Strip">
+              <img src="assets/ui/btn-download-strip.png" alt="Download Strip">
+            </button>
+
+            <button id="retake-btn" class="img-btn" aria-label="Retake">
+              <img src="assets/ui/btn-retake.png" alt="Retake">
+            </button>
+
+            <button id="next-guest-btn" class="img-btn" aria-label="Next Guest">
+              <img src="assets/ui/btn-next-guest.png" alt="Next Guest">
+            </button>
+          </div>
+        </div>
+
+    <canvas id="photo-canvas" class="hidden-canvas"></canvas>
+
+  <script src="./script.js?v=3"></script>
+</body>
+</html>
