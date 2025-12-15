@@ -31,7 +31,7 @@ const PHOTO_WIDTH = 400;
 const PHOTO_HEIGHT = 415;
 const STRIP_PADDING = 30;
 const PHOTO_SPACING = 20;
-const FOOTER_HEIGHT = 80;
+const FOOTER_HEIGHT = 130;
 
 function showScreen(screen) {
   [startScreen, cameraScreen, developingScreen, previewScreen, actionsScreen]
@@ -300,19 +300,41 @@ function createPhotoStrip() {
     });
   });
 
-  Promise.all(imagesLoaded).then(() => {
-    // Footer text
-    const footerY = STRIP_PADDING + (3 * PHOTO_HEIGHT) + (2 * PHOTO_SPACING) + 20;
+  Promise.all(imagesLoaded).then(async () => {
 
-    ctx.font = 'bold 28px Georgia, serif';
-    ctx.fillStyle = '#c41e3a';
-    ctx.textAlign = 'center';
-    ctx.fillText('Merry Christmas 🎄', stripCanvas.width / 2, footerY + 40);
 
-    const date = new Date();
-    ctx.font = '14px Georgia, serif';
-    ctx.fillStyle = '#666';
-    ctx.fillText(date.toLocaleDateString(), stripCanvas.width / 2, footerY + 60);
+ // Footer text (order: Merry Christmas > date > space > by michellelichen.com)
+const footerY = STRIP_PADDING + (3 * PHOTO_HEIGHT) + (2 * PHOTO_SPACING) + 20;
+const cx = stripCanvas.width / 2;
+
+ctx.textAlign = 'center';
+
+// Ensure font is available (safe even if it’s already loaded)
+if (document.fonts && document.fonts.load) {
+  await document.fonts.load('42px "Beau Rivage"');
+}
+
+// 1) Merry Christmas
+ctx.font = '42px "Beau Rivage", cursive';
+ctx.fillStyle = '#c41e3a';
+ctx.fillText('Merry Christmas', cx, footerY + 44);
+
+// 2) Date (with • separators)
+const d = new Date();
+const mm = String(d.getMonth() + 1).padStart(2, '0');
+const dd = String(d.getDate()).padStart(2, '0');
+const yyyy = d.getFullYear();
+const dateStr = `${mm} • ${dd} • ${yyyy}`;
+
+ctx.font = '20px Georgia, serif';
+ctx.fillStyle = '#666';
+ctx.fillText(dateStr, cx, footerY + 66);
+
+// 3) Extra space, then by-line
+ctx.font = '16px Georgia, serif';
+ctx.fillStyle = '#8b8b8bff';
+ctx.fillText('by michellelichen.com', cx, footerY + 96);
+
 
     // Go to screen 3 (preview)
     showScreen(previewScreen);

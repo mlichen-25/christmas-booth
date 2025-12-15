@@ -42,7 +42,7 @@ body {
 }
 
 #start-screen {
-    background-image: url('assets/bg/1-bg-plaid-red.png');
+    background-image: url(assets/bg/2-1-bg-plaid-red.png);
 }
 
 /* Start screen stage = full-screen positioning context */
@@ -110,7 +110,7 @@ body {
 #developing-screen,
 #preview-screen,
 #actions-screen {
-    background-image: url('assets/bg/2-bg-plaid-green.png');
+    background-image: url(assets/bg/2-2-bg-plaid-green.png);
 }
 
 
@@ -244,6 +244,7 @@ body {
   overflow: hidden;
   z-index: 1;
   background: transparent;
+  position: relative; 
 }
 
 /* Make the video fill the hole in ALL browsers */
@@ -259,17 +260,15 @@ body {
     display: block;
 }
 
-.countdown-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
+.countdown-overlay{
+  position: absolute;
+  inset: 0;                         /* ✅ fills only the video-hole */
+  background: rgba(0,0,0,0.55);     /* keep your dark tint */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;                       /* above video, still inside hole */
+  pointer-events: none;
 }
 
 .countdown-overlay.hidden {
@@ -293,16 +292,13 @@ body {
     50% { transform: scale(1.1); }
 }
 
-.flash {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: white;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 20;
+.flash{
+  position: fixed;       /* ✅ covers the whole screen */
+  inset: 0;              /* top:0 right:0 bottom:0 left:0 */
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;         /* ✅ above everything */
 }
 
 .flash.active {
@@ -572,7 +568,7 @@ body {
 
   /* Make the Start button not too huge */
   .img-btn img{ max-width: 280px; }
-}
+
 
 /* =========================
    Screen 3: Preview (metal)
@@ -582,11 +578,11 @@ body {
 /* If you have these BG assets, use them.
    If your filenames differ, update the URLs here. */
 #preview-screen{
-    background-image: url('assets/bg/3-bg-bear-red.png');
+    background-image: url(assets/bg/2-3-bg-bear-red.png);
 }
 
 #actions-screen{
-    background-image: url('assets/bg/4-bg-knitted-trees.png'));
+    background-image: url(assets/bg/2-4-bg-knit-trees.png);
 }
 
 
