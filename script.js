@@ -452,14 +452,19 @@ if (captureBtn) captureBtn.addEventListener('click', takePhotoSequence);
 
 
 
-function goToActions() {
-  // If you removed actions-screen from HTML, fall back to preview-screen
-  if (actionsScreen) showScreen(actionsScreen);
-  else console.warn("⚠️ actionsScreen not found in HTML");
+function saveStripAndGoActions(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  downloadStrip();              // ✅ save
+  showScreen(actionsScreen);    // ✅ then go to screen 4
 }
 
 if (previewScreen) {
-  previewScreen.addEventListener('click', goToActions);
+  previewScreen.addEventListener('click', saveStripAndGoActions);
+  // ❌ remove touchend to avoid double-firing on mobile
 }
 
 
@@ -485,18 +490,5 @@ if (nextGuestBtn) {
     resetPhotobooth();
     stopCamera();
     showScreen(startScreen);
-  });
-}
-
-// if (continueBtn) {
-//   continueBtn.addEventListener('click', () => {
-//     showScreen(actionsScreen);
-//   });
-// }
-
-// also allow tapping the strip itself to continue
-if (stripCanvas) {
-  stripCanvas.addEventListener('click', () => {
-    showScreen(actionsScreen);
   });
 }
