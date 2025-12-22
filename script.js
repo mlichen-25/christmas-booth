@@ -250,6 +250,45 @@ function drawHollyBerries(ctx, x, y, radius) {
     ctx.fill();
 }
 
+function startStripPulse() {
+  let el = document.getElementById('strip-canvas');
+
+  if (!el && previewScreen) {
+    el = previewScreen.querySelector('canvas');
+  }
+
+  if (!el) {
+    console.warn("startStripPulse: couldn't find strip element to animate");
+    return;
+  }
+
+  el.classList.add('pulse-loop');
+
+  // Stop pulsing as soon as they interact (click/tap)
+  const stop = () => stopStripPulse();
+
+  // Use capture so it triggers even if other handlers run
+  previewScreen?.addEventListener('click', stop, { once: true, capture: true });
+  previewScreen?.addEventListener('touchend', stop, { once: true, capture: true });
+
+  // Also stop if they tap the canvas itself
+  el.addEventListener('click', stop, { once: true });
+  el.addEventListener('touchend', stop, { once: true });
+
+  console.log("✅ startStripPulse applied to:", el);
+}
+
+function stopStripPulse() {
+  let el = document.getElementById('strip-canvas');
+  if (!el && previewScreen) el = previewScreen.querySelector('canvas');
+  if (!el) return;
+
+  el.classList.remove('pulse-loop');
+}
+
+
+
+
 function createPhotoStrip() {
   const stripWidth = PHOTO_WIDTH + (STRIP_PADDING * 2);
   const stripHeight =
@@ -336,15 +375,28 @@ ctx.fillStyle = '#8b8b8bff';
 ctx.fillText('by michellelichen.com', cx, footerY + 96);
 
 
-    // Go to screen 3 (preview)
-    showScreen(previewScreen);
+// Go to screen 3 (preview)
+showScreen(previewScreen);
 
-      // Restart drop animation every time + make it visible
-      if (stripDropEl) {
-        stripDropEl.classList.remove('run');
-        void stripDropEl.offsetWidth; // force reflow
-        stripDropEl.classList.add('run');
-      }
+// Restart drop animation every time + make it visible
+if (stripDropEl) {
+  stripDropEl.classList.remove('run');
+  void stripDropEl.offsetWidth; // force reflow
+  stripDropEl.classList.add('run');
+
+  // ✅ Pulse ONLY after the drop animation completes
+  stripDropEl.addEventListener(
+    'animationend',
+    () => {
+      startStripPulse();
+    },
+    { once: true }
+  );
+} else {
+  // Fallback: if stripDropEl isn't found, pulse immediately
+  pulseStripOnce();
+}
+
   });
 }
 
@@ -451,22 +503,16 @@ if (!startBtn) {
 if (captureBtn) captureBtn.addEventListener('click', takePhotoSequence);
 
 
-
-function saveStripAndGoActions(e) {
-  if (e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-
-  downloadStrip();              // ✅ save
-  showScreen(actionsScreen);    // ✅ then go to screen 4
+function goToActions() {
+  // If you removed actions-screen from HTML, fall back to preview-screen
+  if (actionsScreen) showScreen(actionsScreen);
+  else console.warn("⚠️ actionsScreen not found in HTML");
 }
 
 if (previewScreen) {
-  previewScreen.addEventListener('click', saveStripAndGoActions);
-  // ❌ remove touchend to avoid double-firing on mobile
+  previewScreen.addEventListener('click', goToActions);
+  previewScreen.addEventListener('touchend', goToActions, { passive: true });
 }
-
 
 
 if (downloadBtn) {
@@ -490,5 +536,17 @@ if (nextGuestBtn) {
     resetPhotobooth();
     stopCamera();
     showScreen(startScreen);
+  });
+}
+
+if (continueBtn) {
+  continueBtn.addEventListener('click', () => {
+    showScreen(actionsScreen);
+  });
+}
+
+if (stripCanvas) {
+  stripCanvas.addEventListener('click', () => {
+    showScreen(actionsScreen);
   });
 }

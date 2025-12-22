@@ -667,3 +667,14 @@ transform: translate(-50%, -50%) translateY(-120px);
   gap: 24px;
   padding: 40px 18px;
 }
+
+@keyframes stripPulseLoop {
+  0%   { transform: scale(1); filter: brightness(1); }
+  50%  { transform: scale(1.02); filter: brightness(1.08); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.pulse-loop {
+  animation: stripPulseLoop 1.4s ease-in-out infinite;
+  transform-origin: center;
+}
